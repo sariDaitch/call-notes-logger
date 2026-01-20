@@ -27,18 +27,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Build & Packaging
+      # Build & Packaging - using -c.mac.identity=null to avoid signing errors on mac
+      # Also added publish: "never" to avoid trying to upload to GitHub Releases automatically via electron-builder
       - name: Build & Snap/Dist (Linux/Mac)
         if: matrix.os != 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run dist
+        run: npm run dist -- -c.publish=never
 
       - name: Build & Dist (Windows)
         if: matrix.os == 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run dist
+        run: npm run dist -- -c.publish=never
 
       # Upload Artifacts (Optional - if you want to download them from the Action run itself)
       - name: Upload Artifacts
